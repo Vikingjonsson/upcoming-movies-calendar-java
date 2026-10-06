@@ -85,20 +85,17 @@ Use the included `./run.sh` launcher:
 
 ```bash
 # Check code formatting (Google Java Format via Spotless)
-./gradlew spotlessCheck
+./mvnw spotless:check
 
 # Automatically apply formatting
-./gradlew spotlessApply
+./mvnw spotless:apply
 
 # Run unit tests
-./gradlew test
+./mvnw test
 
-# Run full verification (formatting + tests)
-./gradlew check
+# Full build and package executable JAR
+./mvnw package
 
-# Build application distribution
-./gradlew installDist
-
-# Run binary directly from distribution
-./build/install/upcoming-movies/bin/upcoming-movies -l
+# Run executable JAR directly
+java -jar target/upcoming-movies.jar -l
 ```

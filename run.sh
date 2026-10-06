@@ -2,11 +2,11 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BIN="$SCRIPT_DIR/build/install/upcoming-movies/bin/upcoming-movies"
+JAR="$SCRIPT_DIR/target/upcoming-movies.jar"
 
-if [ ! -f "$BIN" ]; then
-    echo "Installing application distribution..."
-    "$SCRIPT_DIR/gradlew" -q -p "$SCRIPT_DIR" installDist
+if [ ! -f "$JAR" ]; then
+    echo "Building application with Maven..."
+    "$SCRIPT_DIR/mvnw" -q -f "$SCRIPT_DIR/pom.xml" package -DskipTests
 fi
 
-exec "$BIN" "$@"
+exec java -jar "$JAR" "$@"

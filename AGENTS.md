@@ -30,11 +30,11 @@ This repository provides a Java 17 CLI tool to scrape upcoming movie releases fr
 
 ## Developer Workflows
 
-Use the Gradle wrapper (`./gradlew`) or the `./run.sh` launcher:
+Use the Maven wrapper (`./mvnw`) or the `./run.sh` launcher:
 
 ```bash
-# Build & install binary distribution
-./gradlew installDist
+# Build & package executable JAR
+./mvnw package
 
 # Run CLI via launcher script
 ./run.sh --help
@@ -46,10 +46,10 @@ Use the Gradle wrapper (`./gradlew`) or the `./run.sh` launcher:
 ./run.sh -i movies.json --card-view   # Offline view from cached JSON
 
 # Verification
-./gradlew spotlessCheck               # Verify Java code formatting
-./gradlew spotlessApply               # Automatically format code
-./gradlew test                        # Run unit test suite
-./gradlew check                       # Run full validation checks (spotless + tests)
+./mvnw spotless:check                 # Verify Java code formatting
+./mvnw spotless:apply                 # Automatically format code
+./mvnw test                           # Run unit test suite
+./mvnw verify                         # Run full validation checks (spotless + tests)
 ```
 
 ## Agent Rules & Conventions
@@ -74,4 +74,4 @@ Use the Gradle wrapper (`./gradlew`) or the `./run.sh` launcher:
    - Keep browser image loading disabled (`profile.managed_default_content_settings.images=2`) and set `page_load_strategy='eager'`.
 
 5. **Verification Before Handoff**:
-   - Always run `./gradlew test` and `./gradlew check` after making code changes.
+   - Always run `./mvnw test` and `./mvnw verify` after making code changes.
