@@ -16,11 +16,11 @@ public final class WebDriverFactory {
 
   private static final Logger logger = LoggerFactory.getLogger(WebDriverFactory.class);
 
-  public static final String DEFAULT_USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
+  public static final String DEFAULT_USER_AGENT =
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
   public static final Duration DEFAULT_PAGE_LOAD_TIMEOUT = Duration.ofSeconds(30);
 
-  private WebDriverFactory() {
-  }
+  private WebDriverFactory() {}
 
   public static ChromeOptions buildChromeOptions(boolean headless, String windowSize) {
     ChromeOptions options = new ChromeOptions();
@@ -30,7 +30,8 @@ public final class WebDriverFactory {
     }
     options.addArguments("--no-sandbox");
     options.addArguments("--disable-dev-shm-usage");
-    options.addArguments("--window-size=" + (windowSize != null ? windowSize : AppConfig.DEFAULT_WINDOW_SIZE));
+    options.addArguments(
+        "--window-size=" + (windowSize != null ? windowSize : AppConfig.DEFAULT_WINDOW_SIZE));
     options.addArguments("--user-agent=" + DEFAULT_USER_AGENT);
     options.addArguments("--disable-blink-features=AutomationControlled");
 

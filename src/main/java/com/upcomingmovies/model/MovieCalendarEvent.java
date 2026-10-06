@@ -11,7 +11,9 @@ import java.util.Optional;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public record MovieCalendarEvent(
     @JsonProperty("title") String title,
-    @JsonProperty("release_date") @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") LocalDate releaseDate,
+    @JsonProperty("release_date")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+        LocalDate releaseDate,
     @JsonProperty("imdb_url") URI imdbUrl,
     @JsonProperty("plot_description") String plotDescription,
     @JsonProperty("poster_image_url") Optional<URI> posterImageUrl,
@@ -70,9 +72,10 @@ public record MovieCalendarEvent(
     }
 
     public Builder posterImageUrl(String posterImageUrl) {
-      this.posterImageUrl = (posterImageUrl != null && !posterImageUrl.isBlank())
-          ? Optional.of(URI.create(posterImageUrl))
-          : Optional.empty();
+      this.posterImageUrl =
+          (posterImageUrl != null && !posterImageUrl.isBlank())
+              ? Optional.of(URI.create(posterImageUrl))
+              : Optional.empty();
       return this;
     }
 
@@ -82,7 +85,8 @@ public record MovieCalendarEvent(
     }
 
     public MovieCalendarEvent build() {
-      return new MovieCalendarEvent(title, releaseDate, imdbUrl, plotDescription, posterImageUrl, genres);
+      return new MovieCalendarEvent(
+          title, releaseDate, imdbUrl, plotDescription, posterImageUrl, genres);
     }
   }
 }

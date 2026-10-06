@@ -1,6 +1,7 @@
 plugins {
     java
     application
+    id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "com.upcomingmovies"
@@ -57,4 +58,13 @@ tasks.withType<JavaCompile> {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+    }
 }

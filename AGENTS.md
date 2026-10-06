@@ -46,8 +46,10 @@ Use the Gradle wrapper (`./gradlew`) or the `./run.sh` launcher:
 ./run.sh -i movies.json --card-view   # Offline view from cached JSON
 
 # Verification
+./gradlew spotlessCheck               # Verify Java code formatting
+./gradlew spotlessApply               # Automatically format code
 ./gradlew test                        # Run unit test suite
-./gradlew check                       # Run full validation checks
+./gradlew check                       # Run full validation checks (spotless + tests)
 ```
 
 ## Agent Rules & Conventions

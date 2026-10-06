@@ -84,8 +84,17 @@ Use the included `./run.sh` launcher:
 ## Development & Testing
 
 ```bash
+# Check code formatting (Google Java Format via Spotless)
+./gradlew spotlessCheck
+
+# Automatically apply formatting
+./gradlew spotlessApply
+
 # Run unit tests
 ./gradlew test
+
+# Run full verification (formatting + tests)
+./gradlew check
 
 # Build application distribution
 ./gradlew installDist

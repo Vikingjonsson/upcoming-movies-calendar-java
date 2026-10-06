@@ -9,18 +9,19 @@ import java.util.Locale;
 
 public final class ScraperUtils {
 
-  private ScraperUtils() {
-  }
+  private ScraperUtils() {}
 
-  private static final DateTimeFormatter IMDB_DATE_FORMAT = new DateTimeFormatterBuilder()
-      .parseCaseInsensitive()
-      .appendPattern("MMM d, yyyy")
-      .toFormatter(Locale.US);
+  private static final DateTimeFormatter IMDB_DATE_FORMAT =
+      new DateTimeFormatterBuilder()
+          .parseCaseInsensitive()
+          .appendPattern("MMM d, yyyy")
+          .toFormatter(Locale.US);
 
-  private static final DateTimeFormatter IMDB_LONG_DATE_FORMAT = new DateTimeFormatterBuilder()
-      .parseCaseInsensitive()
-      .appendPattern("MMMM d, yyyy")
-      .toFormatter(Locale.US);
+  private static final DateTimeFormatter IMDB_LONG_DATE_FORMAT =
+      new DateTimeFormatterBuilder()
+          .parseCaseInsensitive()
+          .appendPattern("MMMM d, yyyy")
+          .toFormatter(Locale.US);
 
   public static LocalDate parseImdbReleaseDate(String dateText) {
     if (dateText == null || dateText.isBlank()) {

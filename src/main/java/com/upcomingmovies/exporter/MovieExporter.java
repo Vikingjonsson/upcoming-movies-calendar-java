@@ -5,15 +5,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public sealed interface MovieExporter permits
-    IcsExporter,
-    JsonExporter,
-    MarkdownCardExporter,
-    TerminalCardExporter {
+public sealed interface MovieExporter
+    permits IcsExporter, JsonExporter, MarkdownCardExporter, TerminalCardExporter {
 
-    ExportFormat format();
+  ExportFormat format();
 
-    void export(List<MovieCalendarEvent> events, Path outputPath) throws IOException;
+  void export(List<MovieCalendarEvent> events, Path outputPath) throws IOException;
 
-    String renderString(List<MovieCalendarEvent> events);
+  String renderString(List<MovieCalendarEvent> events);
 }

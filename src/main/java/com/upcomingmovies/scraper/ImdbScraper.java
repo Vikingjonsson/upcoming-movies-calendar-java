@@ -22,7 +22,8 @@ public class ImdbScraper {
 
   private static final Logger logger = LoggerFactory.getLogger(ImdbScraper.class);
 
-  public static final String IMDB_CALENDAR_URL_TEMPLATE = "https://www.imdb.com/calendar/?ref_=rlm&region=%s&type=MOVIE";
+  public static final String IMDB_CALENDAR_URL_TEMPLATE =
+      "https://www.imdb.com/calendar/?ref_=rlm&region=%s&type=MOVIE";
   public static final String DEFAULT_DESCRIPTION = "No description available";
 
   public static final String CALENDAR_SECTION_SELECTOR = "[data-testid=\"calendar-section\"]";
@@ -44,7 +45,8 @@ public class ImdbScraper {
   }
 
   public List<MovieCalendarEvent> scrapeUpcomingMovies(String region) {
-    String targetRegion = (region != null && !region.isBlank()) ? region.trim().toUpperCase() : config.region();
+    String targetRegion =
+        (region != null && !region.isBlank()) ? region.trim().toUpperCase() : config.region();
     String calendarUrl = String.format(IMDB_CALENDAR_URL_TEMPLATE, targetRegion);
     logger.info("Scraping upcoming movies for region: {}", targetRegion);
 
@@ -56,8 +58,9 @@ public class ImdbScraper {
       logger.debug("Loaded IMDB calendar page for region {}", targetRegion);
 
       WebDriverWait wait = new WebDriverWait(driver, config.timeout());
-      String scriptCheck = "return !!document.getElementById('__NEXT_DATA__') || " +
-          "document.querySelectorAll('[data-testid=\"calendar-section\"]').length > 0";
+      String scriptCheck =
+          "return !!document.getElementById('__NEXT_DATA__') || "
+              + "document.querySelectorAll('[data-testid=\"calendar-section\"]').length > 0";
       wait.until(d -> Boolean.TRUE.equals(((JavascriptExecutor) d).executeScript(scriptCheck)));
 
       // 1. Try fast-path via embedded NEXT_DATA
@@ -87,7 +90,8 @@ public class ImdbScraper {
 
   @SuppressWarnings("unchecked")
   protected List<MovieCalendarEvent> scrapeViaNextData(WebDriver driver) {
-    String jsScript = """
+    String jsScript =
+        """
         const callback = arguments[arguments.length - 1];
         let nextData = null;
         try {
@@ -206,14 +210,15 @@ public class ImdbScraper {
         String poster = (String) item.get("poster");
         List<String> genres = (List<String>) item.get("genres");
 
-        events.add(MovieCalendarEvent.builder()
-            .title(title)
-            .releaseDate(relDate)
-            .imdbUrl(imdbUrl != null ? URI.create(imdbUrl) : null)
-            .plotDescription(plot != null ? plot : DEFAULT_DESCRIPTION)
-            .posterImageUrl(poster)
-            .genres(genres != null ? genres : List.of())
-            .build());
+        events.add(
+            MovieCalendarEvent.builder()
+                .title(title)
+                .releaseDate(relDate)
+                .imdbUrl(imdbUrl != null ? URI.create(imdbUrl) : null)
+                .plotDescription(plot != null ? plot : DEFAULT_DESCRIPTION)
+                .posterImageUrl(poster)
+                .genres(genres != null ? genres : List.of())
+                .build());
       }
 
       logger.info("Extracted {} movies via NEXT_DATA fast path", events.size());
@@ -227,7 +232,8 @@ public class ImdbScraper {
 
   @SuppressWarnings("unchecked")
   protected List<ScheduledMovie> collectMovieLinksFromCalendarPage(WebDriver driver) {
-    String jsScript = """
+    String jsScript =
+        """
         const sections = document.querySelectorAll(arguments[0]);
         const results = [];
         for (const section of sections) {
@@ -254,20 +260,21 @@ public class ImdbScraper {
         """;
 
     JavascriptExecutor js = (JavascriptExecutor) driver;
-    List<Map<String, String>> rawData = (List<Map<String, String>>) js.executeScript(
-        jsScript,
-        CALENDAR_SECTION_SELECTOR,
-        RELEASE_DATE_CLASS_NAME,
-        MOVIE_ENTRY_SELECTOR,
-        MOVIE_TITLE_CLASS_NAME);
+    List<Map<String, String>> rawData =
+        (List<Map<String, String>>)
+            js.executeScript(
+                jsScript,
+                CALENDAR_SECTION_SELECTOR,
+                RELEASE_DATE_CLASS_NAME,
+                MOVIE_ENTRY_SELECTOR,
+                MOVIE_TITLE_CLASS_NAME);
 
     List<ScheduledMovie> scheduledMovies = new ArrayList<>();
     if (rawData != null) {
       for (Map<String, String> row : rawData) {
-        scheduledMovies.add(new ScheduledMovie(
-            row.get("title"),
-            row.get("release_date_text"),
-            URI.create(row.get("imdb_url"))));
+        scheduledMovies.add(
+            new ScheduledMovie(
+                row.get("title"), row.get("release_date_text"), URI.create(row.get("imdb_url"))));
       }
     }
     logger.info("Found {} movies on calendar page via DOM", scheduledMovies.size());
@@ -275,8 +282,7 @@ public class ImdbScraper {
   }
 
   protected List<MovieCalendarEvent> scrapeAllMovieDetails(
-      WebDriver driver,
-      List<ScheduledMovie> movieLinks) {
+      WebDriver driver, List<ScheduledMovie> movieLinks) {
     List<MovieCalendarEvent> events = new ArrayList<>();
     Map<String, MovieCalendarEvent> cache = new HashMap<>();
 
@@ -286,24 +292,31 @@ public class ImdbScraper {
       try {
         parsedDate = ScraperUtils.parseImdbReleaseDate(scheduledMovie.releaseDateText());
       } catch (Exception e) {
-        logger.error("Could not parse date '{}' for '{}', skipping",
-            scheduledMovie.releaseDateText(), scheduledMovie.title());
+        logger.error(
+            "Could not parse date '{}' for '{}', skipping",
+            scheduledMovie.releaseDateText(),
+            scheduledMovie.title());
         continue;
       }
 
       String baseUrl = scheduledMovie.imdbUrl().toString().split("\\?")[0];
       if (cache.containsKey(baseUrl)) {
         MovieCalendarEvent cached = cache.get(baseUrl);
-        events.add(MovieCalendarEvent.builder()
-            .title(scheduledMovie.title())
-            .releaseDate(parsedDate)
-            .imdbUrl(scheduledMovie.imdbUrl())
-            .plotDescription(cached.plotDescription())
-            .posterImageUrl(cached.posterImageUrl().orElse(null))
-            .genres(cached.genres())
-            .build());
+        events.add(
+            MovieCalendarEvent.builder()
+                .title(scheduledMovie.title())
+                .releaseDate(parsedDate)
+                .imdbUrl(scheduledMovie.imdbUrl())
+                .plotDescription(cached.plotDescription())
+                .posterImageUrl(cached.posterImageUrl().orElse(null))
+                .genres(cached.genres())
+                .build());
       } else {
-        logger.debug("Scraping details for movie {}/{}: {}", i + 1, movieLinks.size(), scheduledMovie.title());
+        logger.debug(
+            "Scraping details for movie {}/{}: {}",
+            i + 1,
+            movieLinks.size(),
+            scheduledMovie.title());
         MovieCalendarEvent event = scrapeMovieDetailPage(driver, scheduledMovie, parsedDate);
         events.add(event);
         cache.put(baseUrl, event);
@@ -314,9 +327,7 @@ public class ImdbScraper {
 
   @SuppressWarnings("unchecked")
   protected MovieCalendarEvent scrapeMovieDetailPage(
-      WebDriver driver,
-      ScheduledMovie movie,
-      LocalDate releaseDate) {
+      WebDriver driver, ScheduledMovie movie, LocalDate releaseDate) {
     String plotDescription = DEFAULT_DESCRIPTION;
     String posterImageUrl = null;
     List<String> genres = List.of();
@@ -330,7 +341,8 @@ public class ImdbScraper {
       } catch (Exception ignored) {
       }
 
-      String jsScript = """
+      String jsScript =
+          """
           const plotEl = document.querySelector(arguments[0]);
           const posterEl = document.querySelector(arguments[1]);
           const genreEls = document.querySelectorAll(arguments[2]);
@@ -343,8 +355,9 @@ public class ImdbScraper {
           """;
 
       JavascriptExecutor js = (JavascriptExecutor) driver;
-      Map<String, Object> details = (Map<String, Object>) js.executeScript(
-          jsScript, PLOT_SELECTOR, POSTER_IMAGE_SELECTOR, GENRES_SELECTOR);
+      Map<String, Object> details =
+          (Map<String, Object>)
+              js.executeScript(jsScript, PLOT_SELECTOR, POSTER_IMAGE_SELECTOR, GENRES_SELECTOR);
 
       if (details != null) {
         if (details.get("plot") instanceof String p && !p.isBlank()) {

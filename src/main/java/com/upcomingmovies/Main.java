@@ -5,8 +5,7 @@ import picocli.CommandLine;
 
 public final class Main {
 
-  private Main() {
-  }
+  private Main() {}
 
   public static void main(String[] args) {
     CommandLine cmd = new CommandLine(new MovieCliCommand());
