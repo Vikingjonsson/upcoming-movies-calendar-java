@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +65,7 @@ public final class TerminalCardExporter implements MovieExporter {
         String border = "─".repeat(width);
         String formattedDate = event.releaseDate().format(TERMINAL_DATE_FORMAT);
         String genresText = event.genres().isEmpty() ? "N/A" : String.join(", ", event.genres());
-        String posterText = event.posterImageUrl().map(Object::toString).orElse("N/A");
+        String posterText = event.posterImageUrl().map(uri -> uri.toString()).orElse("N/A");
         String imdbUrlStr = event.imdbUrl() != null ? event.imdbUrl().toString() : "N/A";
 
         List<String> lines = new ArrayList<>();

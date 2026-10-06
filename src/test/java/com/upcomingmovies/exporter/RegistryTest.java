@@ -2,7 +2,6 @@ package com.upcomingmovies.exporter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

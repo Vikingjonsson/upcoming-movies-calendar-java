@@ -11,4 +11,6 @@ bin/
 *.json
 *.md
 !README.md
+!AGENTS.md
+!.agents/**
 upcoming_movies*
