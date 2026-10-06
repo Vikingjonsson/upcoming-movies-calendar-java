@@ -45,7 +45,9 @@ Use this skill when developing, testing, scraping, or exporting upcoming movie c
 ## Verification Workflows
 
 ```bash
-./gradlew test                        # Run unit test suite
-./gradlew check                       # Run full validation checks
-./gradlew installDist                 # Build application binary distribution
+./mvnw spotless:check                 # Verify Java code formatting
+./mvnw spotless:apply                 # Automatically format code
+./mvnw test                           # Run unit test suite
+./mvnw verify                         # Run full validation checks (spotless + tests)
+./mvnw package                        # Build executable fat JAR
 ```
